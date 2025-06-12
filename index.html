@@ -1,87 +1,77 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="$VERIFY is a decentralized verification token built on Base.">
-  <title>$VERIFY Token</title>
-  <link rel="icon" type="image/svg+xml" href="/verify-logo.svg">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #0e0e0e;
-      color: #ffffff;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      padding: 2rem;
-      text-align: center;
-      background-color: #1a1a1a;
-    }
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-    }
-    p {
-      max-width: 600px;
-      margin: auto;
-    }
-    section {
-      padding: 2rem;
-      text-align: center;
-    }
-    .btn {
-      display: inline-block;
-      margin-top: 1rem;
-      padding: 0.75rem 1.5rem;
-      background-color: #3b82f6;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 0.5rem;
-    }
-    footer {
-      padding: 1rem;
-      text-align: center;
-      background: #111;
-      font-size: 0.9rem;
-      color: #aaa;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <img src="/verify-logo.svg" alt="$VERIFY Logo" width="100">
-    <h1>$VERIFY Token</h1>
-    <p>The decentralized trust layer for Web3 — built on Base.</p>
-  </header>
+import { useEffect } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
+import Link from "next/link"; // <- re-added this
 
-  <section>
-    <h2>Token Info</h2>
-    <p><strong>Contract Address:</strong> <br>
-      <a href="https://basescan.org/address/0xe7565c1aeC6e72e2c05Cc69E34dfEBbB2D968B10" target="_blank">
-        0xe7565c1aeC6e72e2c05Cc69E34dfEBbB2D968B10
-      </a>
-    </p>
-    <a class="btn" href="https://basescan.org/token/0xe7565c1aeC6e72e2c05Cc69E34dfEBbB2D968B10" target="_blank">View on BaseScan</a>
-  </section>
+export default function Home() {
+  const { scrollYProgress } = useScroll();
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 2]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.8, 0.5]);
 
-  <section>
-    <h2>Roadmap</h2>
-    <p>✅ Token Deployed<br>
-       🔄 Website Launched<br>
-       🚀 Submit Metadata to BaseScan<br>
-       🧠 Phase 2: Verification Portal</p>
-  </section>
+  return (
+    <main className="w-screen bg-black text-white overflow-x-hidden font-sans">
+      {/* Hero Section with 3D Canvas */}
+      <section className="h-screen w-screen flex flex-col items-center justify-center text-center px-6 relative overflow-hidden">
+        <motion.div className="absolute inset-0 z-0" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2 }}>
+          <Canvas>
+            <ambientLight intensity={0.6} />
+            <directionalLight position={[2, 2, 5]} intensity={1} />
+            <OrbitControls enableZoom={false} />
+            <mesh rotation={[0.4, 0.2, 0]}>
+              <icosahedronGeometry args={[2, 1]} />
+              <meshStandardMaterial color="#3b82f6" wireframe />
+            </mesh>
+          </Canvas>
+        </motion.div>
 
-  <section>
-    <h2>Contact</h2>
-    <p>For inquiries, partnerships, or listings:<br>
-    <a href="mailto:info@verifytoken.org">info@verifytoken.org</a></p>
-  </section>
+        <motion.div className="z-10 text-center" initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 1.5, ease: "easeOut" }}>
+          <h1 className="text-7xl md:text-9xl font-extrabold tracking-wide bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent drop-shadow-lg">
+            VERIFY
+          </h1>
+          <p className="text-2xl md:text-3xl mt-4 max-w-3xl mx-auto text-white/80">
+            Powering decentralized truth with blockchain-verified trust.
+          </p>
+        </motion.div>
+      </section>
 
-  <footer>
-    &copy; 2025 VERIFY. All rights reserved.
-  </footer>
-</body>
-</html>
+      {/* FAQ Submission */}
+      <section className="min-h-screen bg-[#111] flex flex-col items-center justify-center text-center px-10 py-20">
+        <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
+          <h2 className="text-5xl font-bold mb-6">Ask Us Anything</h2>
+          <p className="text-lg max-w-3xl text-white/70 mb-6">
+            Got questions about $VERIFY? Ask below. We'll review submissions and post our responses publicly.
+          </p>
+          <form className="w-full max-w-2xl text-left">
+            <label className="block mb-2 text-sm font-medium">Your Question:</label>
+            <textarea
+              placeholder="Type your question here..."
+              className="w-full p-4 h-32 rounded-lg text-black"
+            />
+            <button
+              type="submit"
+              className="mt-4 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              Submit Question
+            </button>
+          </form>
+        </motion.div>
+      </section>
+
+      {/* Routing Links */}
+      <section className="bg-black py-20 text-center">
+        <h2 className="text-4xl font-bold mb-4">Explore More</h2>
+        <div className="flex flex-wrap justify-center gap-6">
+          <Link href="/dao" className="text-blue-400 hover:text-blue-300 text-lg">DAO</Link>
+          <Link href="/docs" className="text-blue-400 hover:text-blue-300 text-lg">Docs</Link>
+          <Link href="/ecosystem" className="text-blue-400 hover:text-blue-300 text-lg">Ecosystem</Link>
+          <Link href="/faq" className="text-blue-400 hover:text-blue-300 text-lg">FAQ Answers</Link>
+        </div>
+      </section>
+
+      <footer className="py-6 text-center text-sm text-gray-400 bg-black">
+        © 2025 VERIFY. Built by Muhyaldeen Jaradat. Powered by Base.
+      </footer>
+    </main>
+  );
+}
